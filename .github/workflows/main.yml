@@ -1,0 +1,38 @@
+name: Deploy to Azure VM
+
+on:
+  push:
+    branches: [ "master" ]   # Run when you push to master branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Build frontend
+      run: |
+        cd frontend
+        npm install
+        npm run build
+
+    - name: Deploy to Azure VM
+      uses: appleboy/ssh-action@v0.1.10
+      with:
+        host: ${{ secrets.AZURE_VM_IP }}
+        username: ${{ secrets.AZURE_VM_USER }}
+        key: ${{ secrets.AZURE_VM_SSH_KEY }}
+        script: |
+          cd ~/retailtech-app
+          git pull origin master
+          cd backend
+          npm install
+          pm2 restart retail-backend || pm2 start server.js --name retail-backend
+          cd ../frontend
+          npm install
+          npm run build
+          sudo rm -rf /var/www/html/*
+          sudo cp -r dist/* /var/www/html/
+          sudo systemctl restart nginx
