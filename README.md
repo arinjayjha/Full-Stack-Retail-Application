@@ -1,7 +1,7 @@
 # RetailTech Solutions - Full Stack Retail Application on Azure VM
 
 ## Student
-**Name:** Your Name Here  
+**Name:** Arinjay Jha 
 **Course:** Cloud Computing - Azure VM Deployment  
 **Assignment:** Deploying a Full-Stack Retail Application on Azure Virtual Machine  
 
